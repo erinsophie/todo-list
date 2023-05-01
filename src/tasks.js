@@ -1,4 +1,4 @@
-class TodoItem {
+class Task {
   constructor(title, dueDate, priority, isCompleted) {
     this.title = title;
     this.dueDate = dueDate;
@@ -17,4 +17,4 @@ class TodoItem {
   }
 }
 
-export default TodoItem;
+export default Task;

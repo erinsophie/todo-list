@@ -1,4 +1,4 @@
-import { TodoItem } from "./TodoItem.js";
+import Task from "./tasks.js";
 import { projectsList } from "./Projects.js";
 
 class Project {
@@ -12,7 +12,7 @@ class Project {
   }
 
   addTask(title, dueDate, priority) {
-    const newTask = new TodoItem(title, dueDate, priority, false);
+    const newTask = new Task(title, dueDate, priority, false);
     this.tasks.push(newTask);
   }
 
