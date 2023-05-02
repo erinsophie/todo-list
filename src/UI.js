@@ -21,6 +21,7 @@ function displayProject(project) {
 
   projectElement.addEventListener("click", () => {
     currentTab = project;
+    console.log("current tab is this project:", currentTab);
 
     const taskList = document.getElementById("task-list");
     taskList.innerHTML = "";
@@ -39,15 +40,38 @@ function createProject(title, dueDate, priority) {
 }
 
 // Handle creating a new project
-function handleCreateProject() {
-  const title = prompt("Enter the project title:");
-  const dueDate = prompt("Enter the project due date:");
-  const priority = prompt("Enter priority level:");
+function addNewProject() {
+  const titleInput = document.getElementById("title-input");
+  const dueDateInput = document.getElementById("date-input");
+  const priorityInput = document.getElementById("priority-input");
+
+  const title = titleInput.value;
+  const dueDate = dueDateInput.value;
+  const priority = priorityInput.value;
+
   if (title && dueDate && priority) {
+    closeModal();
     createProject(title, dueDate, priority);
+    clearInputFields(titleInput, dueDateInput, priorityInput);
   } else {
     alert("Both title and due date are required.");
   }
+}
+
+function clearInputFields(titleInput, dateInput, priorityInput) {
+  titleInput.value = "";
+  dateInput.value = "";
+  priorityInput.value = "";
+}
+
+function openModal() {
+  const modal = document.querySelector(".modal");
+  modal.classList.add("active");
+}
+
+function closeModal() {
+  const modal = document.querySelector(".modal");
+  modal.classList.remove("active");
 }
 
 // display task
@@ -98,27 +122,35 @@ function handleCreateTask() {
   }
 }
 
+// open inbox
+function openInbox() {
+  currentTab = null;
+  console.log("current tab is index", currentTab);
+  const taskList = document.getElementById("task-list");
+  taskList.innerHTML = "";
+
+  // Display tasks from the inbox
+  inboxList.tasks.forEach((task) => {
+    displayTask(task);
+  });
+}
+
 function eventListeners() {
   // create project button
   const createProjectButton = document.getElementById("create-project-btn");
-  createProjectButton.addEventListener("click", handleCreateProject);
+  createProjectButton.addEventListener("click", openModal);
 
   // create task button
   const addTaskButton = document.getElementById("add-task-btn");
   addTaskButton.addEventListener("click", handleCreateTask);
 
+  // add new project
+  const addButton = document.querySelector(".add-project-btn");
+  addButton.addEventListener("click", addNewProject);
+
   // inbox button
   const inboxBtn = document.getElementById("inbox-btn");
-  inboxBtn.addEventListener("click", () => {
-    currentTab = null;
-    const taskList = document.getElementById("task-list");
-    taskList.innerHTML = "";
-
-    // Display tasks from the inbox
-    inboxList.tasks.forEach((task) => {
-      displayTask(task);
-    });
-  });
+  inboxBtn.addEventListener("click", openInbox);
 }
 
 eventListeners();
