@@ -31,8 +31,6 @@ function displayProject(project) {
   const projectList = document.getElementById("project-list");
   projectList.appendChild(projectElement);
 
-  console.log(projectsList.projects)
-
   // open project when clicked
   projectElement.addEventListener("click", () => {
     openProject(project);
@@ -48,6 +46,7 @@ function displayProject(project) {
 function removeProject(projectElement, project) {
   // Remove the project from the projects array
   projectsList.deleteProject(project);
+  project.tasks.length = 0;
 
   // Remove the project from the UI
   projectElement.remove();
@@ -57,12 +56,13 @@ function removeProject(projectElement, project) {
   projectList.childNodes.forEach((projectElement, index) => {
     projectElement.dataset.index = index;
   });
-  console.log(projectsList.projects)
+  console.log("projectslist array:", projectsList.projects);
+  console.log("this projects tasks:", project.tasks);
 }
 
 function openProject(project) {
   currentTab = project;
-  console.log("current tab is this project:", currentTab);
+  console.log("current tab is:", currentTab);
 
   const taskList = document.getElementById("task-list");
   taskList.innerHTML = "";
@@ -72,7 +72,6 @@ function openProject(project) {
     displayTask(task);
   });
 }
-
 
 // Create a new project
 function createProject(title, dueDate, priority) {
@@ -96,7 +95,7 @@ function addNewProject(event) {
     createProject(title, dueDate, priority);
     clearInputFields(titleInput, dueDateInput, priorityInput);
   } else {
-    alert("Both title and due date are required.");
+    alert("Please fill out all fields.");
   }
 }
 
@@ -142,10 +141,8 @@ function createTask(title, dueDate, priority, project = null) {
 
   if (project) {
     project.addTask(title, dueDate, priority);
-    console.log("project tasks:", project.tasks);
   } else {
     inboxList.addTask(title, dueDate, priority);
-    console.log("inbox tasks:", inboxList.tasks);
   }
   displayTask(task);
 }
@@ -154,6 +151,13 @@ function createTask(title, dueDate, priority, project = null) {
 function openTaskForm() {
   const taskDiv = document.querySelector(".task-div");
   taskDiv.style.display = "block";
+}
+
+// close task form
+function closeTaskForm(event) {
+  event.preventDefault();
+  const taskDiv = document.querySelector(".task-div");
+  taskDiv.style.display = "none";
 }
 
 // add task to project
@@ -174,7 +178,7 @@ function addTaskToProject(event) {
     createTask(title, dueDate, priority, currentTab);
     clearInputFields(titleInput, dueDateInput, priorityInput);
   } else {
-    alert("Both title and due date are required.");
+    alert("Please fill out all fields.");
   }
 }
 
@@ -214,6 +218,10 @@ function eventListeners() {
   // inbox button
   const inboxBtn = document.getElementById("inbox-btn");
   inboxBtn.addEventListener("click", openInbox);
+
+  // cancel task
+  const cancelTaskButton = document.getElementById("cancel-task");
+  cancelTaskButton.addEventListener("click", closeTaskForm);
 }
 
 eventListeners();
