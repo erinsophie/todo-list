@@ -1,5 +1,5 @@
 import Project from "./project.js";
-import { projectsList, Projects } from "./projects.js";
+import { projectsList } from "./projects.js";
 import Task from "./tasks.js";
 import { inboxList } from "./inbox.js";
 
@@ -28,8 +28,12 @@ function displayProject(project) {
   deleteBtn.textContent = "Delete";
 
   projectElement.append(projectTitle, deleteBtn);
-  const projectList = document.getElementById("project-list");
-  projectList.appendChild(projectElement);
+
+  const projectListUI = document.getElementById("project-list");
+  projectListUI.appendChild(projectElement);
+
+  console.log("list of projects:", projectsList.projects);
+  console.log("this projects tasks:", project.tasks);
 
   // open project when clicked
   projectElement.addEventListener("click", () => {
@@ -44,22 +48,25 @@ function displayProject(project) {
 
 // remove project
 function removeProject(projectElement, project) {
-  // Remove the project from the projects array
+  // Remove the project and its tasks from the projects array
   projectsList.deleteProject(project);
   project.tasks.length = 0;
 
-  // Remove the project from the UI
+  // Remove the project and its tasks from the UI
   projectElement.remove();
+  const taskList = document.getElementById("task-list");
+  taskList.innerHTML = "";
 
   // Update the data-index attributes for the remaining projects
-  const projectList = document.getElementById("project-list");
-  projectList.childNodes.forEach((projectElement, index) => {
-    projectElement.dataset.index = index;
+  const projectListUI = document.getElementById("project-list");
+  projectListUI.childNodes.forEach((project, index) => {
+    project.dataset.index = index;
   });
   console.log("projectslist array:", projectsList.projects);
   console.log("this projects tasks:", project.tasks);
 }
 
+// open project
 function openProject(project) {
   currentTab = project;
   console.log("current tab is:", currentTab);
@@ -70,6 +77,20 @@ function openProject(project) {
   // Display tasks associated with the clicked project
   project.tasks.forEach((task) => {
     displayTask(task);
+  });
+
+  // Highlight the selected project
+  const inboxBtn = document.getElementById('inbox-btn');
+  const projectElements = document.querySelectorAll(".project");
+  projectElements.forEach((projectElement) => {
+    projectElement.classList.remove("current-tab");
+    if (
+      projectElement.dataset.index ===
+      projectsList.projects.indexOf(project).toString()
+    ) {
+      projectElement.classList.add("current-tab");
+      inboxBtn.classList.remove('current-tab')
+    }
   });
 }
 
@@ -131,7 +152,11 @@ function displayTask(task) {
   priority.classList.add("priority-level");
   priority.textContent = `${task.priority}`;
 
-  taskItem.append(taskTitle, taskDate, priority);
+  const deleteTaskBtn = document.createElement("button");
+  deleteTaskBtn.classList.add("delete-task");
+  deleteTaskBtn.textContent = "Delete task";
+
+  taskItem.append(taskTitle, taskDate, priority, deleteTaskBtn);
   taskList.append(taskItem);
 }
 
@@ -144,7 +169,7 @@ function createTask(title, dueDate, priority, project = null) {
   } else {
     inboxList.addTask(title, dueDate, priority);
   }
-  displayTask(task);
+  displayTask(task, project);
 }
 
 // open task form
@@ -196,6 +221,14 @@ function openInbox() {
   inboxList.tasks.forEach((task) => {
     displayTask(task);
   });
+
+  // Highlight the inbox
+  const inboxBtn = document.getElementById("inbox-btn");
+  const projectElements = document.querySelectorAll(".project");
+  projectElements.forEach((projectElement) => {
+    projectElement.classList.remove("current-tab");
+  });
+  inboxBtn.classList.add("current-tab");
 }
 
 function eventListeners() {

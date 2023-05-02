@@ -46,3 +46,7 @@
 .task-div {
   display: none;
 }
+
+.current-tab {
+  background-color: lightgray;
+}
