@@ -22,23 +22,45 @@
       <ul id="project-list"></ul>
 
       <div class="modal">
-        <p class="message">New project</p>
-      
-        <label for="title-input">Name:</label>
-        <input id="title-input" type="text">
+        <form id="modal-form">
+          <p class="message">New project</p>
 
-        <label for="date-input">Due date:</label>
-        <input id="date-input" type="text">
+          <label for="title-input">Name:</label>
+          <input id="title-input" type="text" />
 
-        <label for="priority-input">Priority:</label>
-        <select id="priority-input" name="priority">
-          <option value="Low">Low</option>
-          <option value="Medium">Medium</option>
-          <option value="High">High</option>
-        </select>
-      
-        <button class="add-project-btn">Add</button>
-        <button class="cancel">Cancel</button>
+          <label for="date-input">Due date:</label>
+          <input id="date-input" type="text" />
+
+          <label for="priority-input">Priority:</label>
+          <select id="priority-input" name="priority">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+
+          <button class="add-project-btn">Add</button>
+          <button class="cancel">Cancel</button>
+        </form>
+      </div>
+
+      <div class="task-div">
+        <form id="task-form">
+          <label for="task-title">Task:</label>
+          <input id="task-title" type="text" />
+
+          <label for="task-date">Due date:</label>
+          <input id="task-date" type="text" />
+
+          <label for="task-priority">Priority:</label>
+          <select id="task-priority" name="priority">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+
+          <button id="add-task-to-project">Add</button>
+          <button class="cancel">Cancel</button>
+        </form>
       </div>
 
       <div class="overlay"></div>

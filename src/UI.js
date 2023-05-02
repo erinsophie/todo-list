@@ -3,8 +3,16 @@ import { projectsList } from "./projects.js";
 import Task from "./tasks.js";
 import { inboxList } from "./inbox.js";
 
+// both projects and tasks
 let currentTab = null;
 
+function clearInputFields(titleInput, dateInput, priorityInput) {
+  titleInput.value = "";
+  dateInput.value = "";
+  priorityInput.value = "";
+}
+
+// projects
 // Display the project on the page
 function displayProject(project) {
   const projectElement = document.createElement("li");
@@ -40,7 +48,8 @@ function createProject(title, dueDate, priority) {
 }
 
 // Handle creating a new project
-function addNewProject() {
+function addNewProject(event) {
+  event.preventDefault();
   const titleInput = document.getElementById("title-input");
   const dueDateInput = document.getElementById("date-input");
   const priorityInput = document.getElementById("priority-input");
@@ -58,12 +67,6 @@ function addNewProject() {
   }
 }
 
-function clearInputFields(titleInput, dateInput, priorityInput) {
-  titleInput.value = "";
-  dateInput.value = "";
-  priorityInput.value = "";
-}
-
 function openModal() {
   const modal = document.querySelector(".modal");
   modal.classList.add("active");
@@ -74,6 +77,9 @@ function closeModal() {
   modal.classList.remove("active");
 }
 
+////////////////////////////////////////////////////////////////
+
+// tasks
 // display task
 function displayTask(task) {
   const taskList = document.getElementById("task-list");
@@ -109,18 +115,37 @@ function createTask(title, dueDate, priority, project = null) {
   displayTask(task);
 }
 
-// handle create task
-function handleCreateTask() {
-  const title = prompt("Title of task:");
-  const dueDate = prompt("Task due date:");
-  const priority = prompt("Priority level:");
+// open task form
+function openTaskForm() {
+  const taskDiv = document.querySelector('.task-div');
+  taskDiv.style.display = 'block';
+}
+
+// add task to project
+function addTaskToProject(event) {
+  event.preventDefault();
+  const taskDiv = document.querySelector('.task-div');
+  
+  const titleInput = document.getElementById("task-title");
+  const dueDateInput = document.getElementById("task-date");
+  const priorityInput = document.getElementById("task-priority");
+
+  const title = titleInput.value;
+  const dueDate = dueDateInput.value;
+  const priority = priorityInput.value;
 
   if (title && dueDate && priority) {
+    taskDiv.style.display = 'none';
     createTask(title, dueDate, priority, currentTab);
+    clearInputFields(titleInput, dueDateInput, priorityInput);
   } else {
     alert("Both title and due date are required.");
   }
 }
+
+
+////////////////////////////////////////////////////////////////
+// inbox and event listeners
 
 // open inbox
 function openInbox() {
@@ -142,7 +167,11 @@ function eventListeners() {
 
   // create task button
   const addTaskButton = document.getElementById("add-task-btn");
-  addTaskButton.addEventListener("click", handleCreateTask);
+  addTaskButton.addEventListener("click", openTaskForm);
+
+  // add task to project 
+  const addTaskToProjectBtn = document.getElementById('add-task-to-project');
+  addTaskToProjectBtn.addEventListener('click', addTaskToProject)
 
   // add new project
   const addButton = document.querySelector(".add-project-btn");
