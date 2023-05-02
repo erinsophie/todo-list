@@ -1,12 +1,9 @@
-import Project from "./Project.js";
-import { projectsList } from "./Projects.js";
+import Project from "./project.js";
+import { projectsList } from "./projects.js";
 import Task from "./tasks.js";
+import { inboxList } from "./inbox.js";
 
-const createProjectButton = document.getElementById("create-project-btn");
-const addTaskButton = document.getElementById("add-task-btn");
-const taskList = document.getElementById("task-list");
-const projectList = document.getElementById("project-list");
-const taskContainer = document.querySelector(".task-list-container");
+let currentTab = null;
 
 // Display the project on the page
 function displayProject(project) {
@@ -19,13 +16,15 @@ function displayProject(project) {
   projectTitle.textContent = `${project.title} (${project.dueDate})`;
 
   projectElement.append(projectTitle);
+  const projectList = document.getElementById("project-list");
   projectList.appendChild(projectElement);
 
   projectElement.addEventListener("click", () => {
+    currentTab = project;
+
+    const taskList = document.getElementById("task-list");
     taskList.innerHTML = "";
-    const title = document.createElement("p");
-    title.textContent = `${project.title}`;
-    taskContainer.append(title);
+
     // Display tasks associated with the clicked project
     project.tasks.forEach((task) => {
       displayTask(task);
@@ -51,8 +50,9 @@ function handleCreateProject() {
   }
 }
 
-// display task in general task list
+// display task
 function displayTask(task) {
+  const taskList = document.getElementById("task-list");
   const taskItem = document.createElement("li");
 
   const taskTitle = document.createElement("p");
@@ -71,9 +71,17 @@ function displayTask(task) {
   taskList.append(taskItem);
 }
 
-// create a new task
-function createTask(title, dueDate, priority) {
-  const task = new Task(title, dueDate, priority);
+// Create a new task and add it to the project's tasks array or the inbox's tasks array
+function createTask(title, dueDate, priority, project = null) {
+  const task = new Task(title, dueDate, priority, false);
+
+  if (project) {
+    project.addTask(title, dueDate, priority);
+    console.log("project tasks:", project.tasks);
+  } else {
+    inboxList.addTask(title, dueDate, priority);
+    console.log("inbox tasks:", inboxList.tasks);
+  }
   displayTask(task);
 }
 
@@ -82,12 +90,46 @@ function handleCreateTask() {
   const title = prompt("Title of task:");
   const dueDate = prompt("Task due date:");
   const priority = prompt("Priority level:");
+
   if (title && dueDate && priority) {
-    createTask(title, dueDate, priority);
+    createTask(title, dueDate, priority, currentTab);
   } else {
     alert("Both title and due date are required.");
   }
 }
 
-createProjectButton.addEventListener("click", handleCreateProject);
-addTaskButton.addEventListener("click", handleCreateTask);
+function eventListeners() {
+  // create project button
+  const createProjectButton = document.getElementById("create-project-btn");
+  createProjectButton.addEventListener("click", handleCreateProject);
+
+  // create task button
+  const addTaskButton = document.getElementById("add-task-btn");
+  addTaskButton.addEventListener("click", handleCreateTask);
+
+  // inbox button
+  const inboxBtn = document.getElementById("inbox-btn");
+  inboxBtn.addEventListener("click", () => {
+    currentTab = null;
+    const taskList = document.getElementById("task-list");
+    taskList.innerHTML = "";
+
+    // Display tasks from the inbox
+    inboxList.tasks.forEach((task) => {
+      displayTask(task);
+    });
+  });
+}
+
+eventListeners();
+
+// Display tasks from the inbox by default
+function initialize() {
+  eventListeners();
+
+  inboxList.tasks.forEach((task) => {
+    displayTask(task);
+  });
+}
+
+initialize();

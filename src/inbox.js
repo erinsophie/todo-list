@@ -1,13 +1,8 @@
 import Task from "./tasks.js";
-import { projectsList } from "./projects.js";
 
-class Project {
-  constructor(title, dueDate, priority) {
-    this.title = title;
-    this.dueDate = dueDate;
-    this.priority = priority;
+export class Inbox {
+  constructor() {
     this.tasks = [];
-    projectsList.addProject(this);
   }
 
   addTask(title, dueDate, priority) {
@@ -23,4 +18,4 @@ class Project {
   }
 }
 
-export default Project;
+export const inboxList = new Inbox();
