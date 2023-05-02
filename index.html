@@ -11,14 +11,37 @@
   <body>
     <main>
       <button id="add-task-btn">Add Task</button>
-      <button id="create-project-btn">Create Project</button>
       <button id="inbox-btn">Inbox</button>
       <h1>Tasks</h1>
       <div class="task-list-container">
         <ul id="task-list"></ul>
       </div>
+
       <h2>List of projects:</h2>
+      <button id="create-project-btn">Add Project</button>
       <ul id="project-list"></ul>
+
+      <div class="modal">
+        <p class="message">New project</p>
+      
+        <label for="title-input">Name:</label>
+        <input id="title-input" type="text">
+
+        <label for="date-input">Due date:</label>
+        <input id="date-input" type="text">
+
+        <label for="priority-input">Priority:</label>
+        <select id="priority-input" name="priority">
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+      
+        <button class="add-project-btn">Add</button>
+        <button class="cancel">Cancel</button>
+      </div>
+
+      <div class="overlay"></div>
     </main>
     <script src="main.js"></script>
   </body>
