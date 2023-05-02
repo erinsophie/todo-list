@@ -7,7 +7,7 @@ export class Projects {
     this.projects.push(project);
   }
 
-  removeProject(project) {
+  deleteProject(project) {
     const index = this.projects.indexOf(project);
     if (index !== -1) {
       this.projects.splice(index, 1);

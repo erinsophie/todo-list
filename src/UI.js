@@ -1,5 +1,5 @@
 import Project from "./project.js";
-import { projectsList } from "./projects.js";
+import { projectsList, Projects } from "./projects.js";
 import Task from "./tasks.js";
 import { inboxList } from "./inbox.js";
 
@@ -17,29 +17,62 @@ function clearInputFields(titleInput, dateInput, priorityInput) {
 function displayProject(project) {
   const projectElement = document.createElement("li");
   projectElement.classList.add("project");
-  projectElement.dataset.projectIndex = projectsList.projects.indexOf(project);
+  projectElement.dataset.index = projectsList.projects.indexOf(project);
 
   const projectTitle = document.createElement("p");
   projectTitle.classList.add("project-title");
   projectTitle.textContent = `${project.title} (${project.dueDate})`;
 
-  projectElement.append(projectTitle);
+  const deleteBtn = document.createElement("button");
+  deleteBtn.classList.add("delete-project-btn");
+  deleteBtn.textContent = "Delete";
+
+  projectElement.append(projectTitle, deleteBtn);
   const projectList = document.getElementById("project-list");
   projectList.appendChild(projectElement);
 
+  console.log(projectsList.projects)
+
+  // open project when clicked
   projectElement.addEventListener("click", () => {
-    currentTab = project;
-    console.log("current tab is this project:", currentTab);
+    openProject(project);
+  });
 
-    const taskList = document.getElementById("task-list");
-    taskList.innerHTML = "";
-
-    // Display tasks associated with the clicked project
-    project.tasks.forEach((task) => {
-      displayTask(task);
-    });
+  deleteBtn.addEventListener("click", (event) => {
+    event.stopPropagation(); // Prevent triggering the click event on the projectElement
+    removeProject(projectElement, project);
   });
 }
+
+// remove project
+function removeProject(projectElement, project) {
+  // Remove the project from the projects array
+  projectsList.deleteProject(project);
+
+  // Remove the project from the UI
+  projectElement.remove();
+
+  // Update the data-index attributes for the remaining projects
+  const projectList = document.getElementById("project-list");
+  projectList.childNodes.forEach((projectElement, index) => {
+    projectElement.dataset.index = index;
+  });
+  console.log(projectsList.projects)
+}
+
+function openProject(project) {
+  currentTab = project;
+  console.log("current tab is this project:", currentTab);
+
+  const taskList = document.getElementById("task-list");
+  taskList.innerHTML = "";
+
+  // Display tasks associated with the clicked project
+  project.tasks.forEach((task) => {
+    displayTask(task);
+  });
+}
+
 
 // Create a new project
 function createProject(title, dueDate, priority) {
@@ -67,17 +100,19 @@ function addNewProject(event) {
   }
 }
 
+// open modal
 function openModal() {
   const modal = document.querySelector(".modal");
   modal.classList.add("active");
 }
 
+// close modal
 function closeModal() {
   const modal = document.querySelector(".modal");
   modal.classList.remove("active");
 }
 
-////////////////////////////////////////////////////////////////
+/// /////////////////////////////////////////////////////////////
 
 // tasks
 // display task
@@ -117,15 +152,15 @@ function createTask(title, dueDate, priority, project = null) {
 
 // open task form
 function openTaskForm() {
-  const taskDiv = document.querySelector('.task-div');
-  taskDiv.style.display = 'block';
+  const taskDiv = document.querySelector(".task-div");
+  taskDiv.style.display = "block";
 }
 
 // add task to project
 function addTaskToProject(event) {
   event.preventDefault();
-  const taskDiv = document.querySelector('.task-div');
-  
+  const taskDiv = document.querySelector(".task-div");
+
   const titleInput = document.getElementById("task-title");
   const dueDateInput = document.getElementById("task-date");
   const priorityInput = document.getElementById("task-priority");
@@ -135,7 +170,7 @@ function addTaskToProject(event) {
   const priority = priorityInput.value;
 
   if (title && dueDate && priority) {
-    taskDiv.style.display = 'none';
+    taskDiv.style.display = "none";
     createTask(title, dueDate, priority, currentTab);
     clearInputFields(titleInput, dueDateInput, priorityInput);
   } else {
@@ -143,8 +178,7 @@ function addTaskToProject(event) {
   }
 }
 
-
-////////////////////////////////////////////////////////////////
+/// /////////////////////////////////////////////////////////////
 // inbox and event listeners
 
 // open inbox
@@ -161,21 +195,21 @@ function openInbox() {
 }
 
 function eventListeners() {
-  // create project button
-  const createProjectButton = document.getElementById("create-project-btn");
-  createProjectButton.addEventListener("click", openModal);
+  // create a project button
+  const addProjectButton = document.getElementById("create-project-btn");
+  addProjectButton.addEventListener("click", openModal);
+
+  // add project to project array
+  const addButton = document.getElementById("add-project-btn");
+  addButton.addEventListener("click", addNewProject);
 
   // create task button
   const addTaskButton = document.getElementById("add-task-btn");
   addTaskButton.addEventListener("click", openTaskForm);
 
-  // add task to project 
-  const addTaskToProjectBtn = document.getElementById('add-task-to-project');
-  addTaskToProjectBtn.addEventListener('click', addTaskToProject)
-
-  // add new project
-  const addButton = document.querySelector(".add-project-btn");
-  addButton.addEventListener("click", addNewProject);
+  // add task to project
+  const addTaskToProjectBtn = document.getElementById("add-task-to-project");
+  addTaskToProjectBtn.addEventListener("click", addTaskToProject);
 
   // inbox button
   const inboxBtn = document.getElementById("inbox-btn");
