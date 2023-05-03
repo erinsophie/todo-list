@@ -4,14 +4,6 @@ import { projectsList } from "./projects.js";
 import Task from "./tasks.js";
 import { inboxList } from "./inbox.js";
 
-// both projects and tasks
-let currentTab = null;
-
-function clearInputFields(titleInput, dateInput, priorityInput) {
-  titleInput.value = "";
-  dateInput.value = "";
-  priorityInput.value = "";
-}
 
 // projects
 // Display the project on the page
@@ -66,6 +58,7 @@ function removeProject(projectElement, project) {
   projectElement.remove();
   // remove tasks from task-list ul
   clearTaskListElement();
+  console.log('list of projects:', projectsList.projects);
 }
 
 // open project
@@ -147,9 +140,11 @@ function displayTask(task) {
   taskTitle.classList.add("task-title");
   taskTitle.textContent = `${task.title}`;
 
+  const taskDueDate = parse(task.dueDate, "dd/MM/yyyy", new Date());
+  const formattedTaskDate = format(taskDueDate, "dd/MM/yyyy");
   const taskDate = document.createElement("p");
-  taskDate.classList.add("task-date");
-  taskDate.textContent = `${task.dueDate}`;
+  taskDate.classList.add("due-date");
+  taskDate.textContent = `${formattedTaskDate}`;
 
   const priority = document.createElement("p");
   priority.classList.add("priority-level");
@@ -221,6 +216,12 @@ function addTaskToProject(event) {
   const dueDate = dueDateInput.value;
   const priority = priorityInput.value;
 
+  const parsedTaskDueDate = parse(dueDate, "dd/MM/yyyy", new Date());
+  if (!isValid(parsedTaskDueDate)) {
+    alert("Please enter a valid due date in the format 'dd/mm/yyyy'");
+    return;
+  }
+
   if (title && dueDate && priority) {
     taskDiv.style.display = "none";
     createTask(title, dueDate, priority, currentTab);
@@ -231,7 +232,14 @@ function addTaskToProject(event) {
 }
 
 /// /////////////////////////////////////////////////////////////
-// inbox and event listeners
+// functions for both projects and tasks
+let currentTab = null;
+
+function clearInputFields(titleInput, dateInput, priorityInput) {
+  titleInput.value = "";
+  dateInput.value = "";
+  priorityInput.value = "";
+}
 
 // open inbox
 function openInbox() {
@@ -254,6 +262,7 @@ function openInbox() {
   console.log("inbox tasks:", inboxList.tasks);
 }
 
+// event listeners
 function eventListeners() {
   // create a project button
   const addProjectButton = document.getElementById("create-project-btn");
