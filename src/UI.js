@@ -46,18 +46,29 @@ function displayProject(project) {
   });
 }
 
+// clear task list ul
+function clearTaskListElement() {
+  const taskList = document.getElementById("task-list");
+  taskList.innerHTML = "";
+}
+
 // remove project
 function removeProject(projectElement, project) {
-  // Remove the project and its tasks from the projects array
+  // Remove the project and its tasks from the projects list array
   projectsList.deleteProject(project);
   project.tasks.length = 0;
 
-  // Remove the project and its tasks from the UI
+  // remove project from project-list ul
   projectElement.remove();
-  const taskList = document.getElementById("task-list");
-  taskList.innerHTML = "";
 
-  // Update the data-index attributes for the remaining projects
+  // remove tasks from task-list ul
+  clearTaskListElement();
+
+  // update data indexes of remaining projects in list
+  updateProjectDataIndex();
+}
+
+function updateProjectDataIndex() {
   const projectListUI = document.getElementById("project-list");
   projectListUI.childNodes.forEach((project, index) => {
     project.dataset.index = index;
@@ -70,9 +81,7 @@ function removeProject(projectElement, project) {
 function openProject(project) {
   currentTab = project;
   console.log("current tab is:", currentTab);
-
-  const taskList = document.getElementById("task-list");
-  taskList.innerHTML = "";
+  clearTaskListElement();
 
   // Display tasks associated with the clicked project
   project.tasks.forEach((task) => {
@@ -80,7 +89,7 @@ function openProject(project) {
   });
 
   // Highlight the selected project
-  const inboxBtn = document.getElementById('inbox-btn');
+  const inboxBtn = document.getElementById("inbox-btn");
   const projectElements = document.querySelectorAll(".project");
   projectElements.forEach((projectElement) => {
     projectElement.classList.remove("current-tab");
@@ -89,7 +98,7 @@ function openProject(project) {
       projectsList.projects.indexOf(project).toString()
     ) {
       projectElement.classList.add("current-tab");
-      inboxBtn.classList.remove('current-tab')
+      inboxBtn.classList.remove("current-tab");
     }
   });
 }
@@ -170,6 +179,7 @@ function createTask(title, dueDate, priority, project = null) {
     inboxList.addTask(title, dueDate, priority);
   }
   displayTask(task, project);
+  console.log("inbox tasks:", inboxList.tasks);
 }
 
 // open task form
@@ -214,8 +224,7 @@ function addTaskToProject(event) {
 function openInbox() {
   currentTab = null;
   console.log("current tab is index", currentTab);
-  const taskList = document.getElementById("task-list");
-  taskList.innerHTML = "";
+  clearTaskListElement();
 
   // Display tasks from the inbox
   inboxList.tasks.forEach((task) => {
@@ -229,6 +238,7 @@ function openInbox() {
     projectElement.classList.remove("current-tab");
   });
   inboxBtn.classList.add("current-tab");
+  console.log("inbox tasks:", inboxList.tasks);
 }
 
 function eventListeners() {
