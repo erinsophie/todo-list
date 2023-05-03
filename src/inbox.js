@@ -8,6 +8,7 @@ export class Inbox {
   addTask(title, dueDate, priority) {
     const newTask = new Task(title, dueDate, priority, false);
     this.tasks.push(newTask);
+    return newTask;
   }
 
   deleteTask(task) {

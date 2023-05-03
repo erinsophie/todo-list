@@ -65,13 +65,13 @@ function removeProject(projectElement, project) {
   clearTaskListElement();
 
   // update data indexes of remaining projects in list
-  updateProjectDataIndex();
+  updateProjectDataIndex(project);
 }
 
-function updateProjectDataIndex() {
+function updateProjectDataIndex(project) {
   const projectListUI = document.getElementById("project-list");
-  projectListUI.childNodes.forEach((project, index) => {
-    project.dataset.index = index;
+  projectListUI.childNodes.forEach((projectNode, index) => {
+    projectNode.dataset.index = index;
   });
   console.log("projectslist array:", projectsList.projects);
   console.log("this projects tasks:", project.tasks);
@@ -167,6 +167,15 @@ function displayTask(task) {
 
   taskItem.append(taskTitle, taskDate, priority, deleteTaskBtn);
   taskList.append(taskItem);
+
+  deleteTaskBtn.addEventListener("click", () => {
+    if (currentTab === null) {
+      inboxList.deleteTask(task);
+    } else {
+      currentTab.deleteTask(task);
+    }
+    taskItem.remove();
+  });
 }
 
 // Create a new task and add it to the project's tasks array or the inbox's tasks array
@@ -179,7 +188,6 @@ function createTask(title, dueDate, priority, project = null) {
     inboxList.addTask(title, dueDate, priority);
   }
   displayTask(task, project);
-  console.log("inbox tasks:", inboxList.tasks);
 }
 
 // open task form
