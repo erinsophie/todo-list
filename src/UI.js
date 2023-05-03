@@ -138,9 +138,11 @@ function displayTask(task) {
   taskTitle.classList.add("task-title");
   taskTitle.textContent = `${task.title}`;
 
-  const taskDate = document.getElementById("date-input");
-  const dueDate = parse(taskDate.value, "dd/MM/yyyy", new Date());
+  const dueDate = parse(task.dueDate, "dd/MM/yyyy", new Date());
   const formattedDate = format(dueDate, "dd/MM/yyyy");
+  const taskDueDate = document.createElement("p");
+  taskDueDate.classList.add("task-due-date");
+  taskDueDate.textContent = formattedDate;
 
   const priority = document.createElement("p");
   priority.classList.add("priority-level");
@@ -150,7 +152,7 @@ function displayTask(task) {
   deleteTaskBtn.classList.add("delete-task");
   deleteTaskBtn.textContent = "Delete task";
 
-  taskItem.append(taskTitle, formattedDate, priority, deleteTaskBtn);
+  taskItem.append(taskTitle, taskDueDate, priority, deleteTaskBtn);
   taskList.append(taskItem);
 
   deleteTaskBtn.addEventListener("click", () => {
