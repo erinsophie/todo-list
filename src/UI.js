@@ -1,7 +1,6 @@
 import { format, parse, isValid } from "date-fns";
 import Project from "./project.js";
 import { projectsList } from "./projects.js";
-import Task from "./tasks.js";
 import { inboxList } from "./inbox.js";
 
 let currentTab = null;
@@ -61,7 +60,7 @@ function removeProject(projectElement, project) {
   clearTaskListElement();
 }
 
-// open project
+// open project and highlight the selected project
 function openProject(project, projectElement) {
   currentTab = project;
   console.log("current tab is:", currentTab);
@@ -72,7 +71,6 @@ function openProject(project, projectElement) {
     displayTask(task);
   });
 
-  // Highlight the selected project
   const inboxBtn = document.getElementById("inbox-btn");
   const projectElements = document.querySelectorAll(".project");
   projectElements.forEach((element) => {
@@ -140,9 +138,9 @@ function displayTask(task) {
   taskTitle.classList.add("task-title");
   taskTitle.textContent = `${task.title}`;
 
-  const taskDate = document.createElement("p");
-  taskDate.classList.add("due-date");
-  taskDate.textContent = `${task.dueDate}`;
+  const taskDate = document.getElementById("date-input");
+  const dueDate = parse(taskDate.value, "dd/MM/yyyy", new Date());
+  const formattedDate = format(dueDate, "dd/MM/yyyy");
 
   const priority = document.createElement("p");
   priority.classList.add("priority-level");
@@ -152,7 +150,7 @@ function displayTask(task) {
   deleteTaskBtn.classList.add("delete-task");
   deleteTaskBtn.textContent = "Delete task";
 
-  taskItem.append(taskTitle, taskDate, priority, deleteTaskBtn);
+  taskItem.append(taskTitle, formattedDate, priority, deleteTaskBtn);
   taskList.append(taskItem);
 
   deleteTaskBtn.addEventListener("click", () => {
@@ -167,7 +165,6 @@ function deleteTask(taskItem, task) {
   } else {
     currentTab.deleteTask(task);
   }
-
   // remove from task-list ul
   taskItem.remove();
   console.log("current inbox tasks:", inboxList.tasks);
@@ -190,6 +187,35 @@ function createTask(title, dueDate, priority, project = null) {
   displayTask(task);
 }
 
+// add task to project
+function addTaskToProject(event) {
+  event.preventDefault();
+  const taskDiv = document.querySelector(".task-div");
+
+  const titleInput = document.getElementById("task-title");
+  const dueDateInput = document.getElementById("task-date");
+  const priorityInput = document.getElementById("task-priority");
+
+  const title = titleInput.value;
+  const dueDate = dueDateInput.value;
+  const priority = priorityInput.value;
+
+  const parsedDueDate = parse(dueDate, "dd/MM/yyyy", new Date());
+  // Check if the due date is valid
+  if (!isValid(parsedDueDate)) {
+    alert("Please enter a valid due date in the format 'dd/mm/yyyy'");
+    return;
+  }
+
+  if (title && dueDate && priority) {
+    taskDiv.style.display = "none";
+    createTask(title, dueDate, priority, currentTab);
+    clearInputFields(titleInput, dueDateInput, priorityInput);
+  } else {
+    alert("Please fill out all fields.");
+  }
+}
+
 // open task form
 function openTaskForm() {
   const taskDiv = document.querySelector(".task-div");
@@ -205,28 +231,6 @@ function closeTaskForm(event) {
   const dueDateInput = document.getElementById("task-date");
   const priorityInput = document.getElementById("task-priority");
   clearInputFields(titleInput, dueDateInput, priorityInput);
-}
-
-// add task to project
-function addTaskToProject(event) {
-  event.preventDefault();
-  const taskDiv = document.querySelector(".task-div");
-
-  const titleInput = document.getElementById("task-title");
-  const dueDateInput = document.getElementById("task-date");
-  const priorityInput = document.getElementById("task-priority");
-
-  const title = titleInput.value;
-  const dueDate = dueDateInput.value;
-  const priority = priorityInput.value;
-
-  if (title && dueDate && priority) {
-    taskDiv.style.display = "none";
-    createTask(title, dueDate, priority, currentTab);
-    clearInputFields(titleInput, dueDateInput, priorityInput);
-  } else {
-    alert("Please fill out all fields.");
-  }
 }
 
 /// /////////////////////////////////////////////////////////////
