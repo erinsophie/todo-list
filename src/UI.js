@@ -1,3 +1,4 @@
+import { format, parse, isValid } from "date-fns";
 import Project from "./project.js";
 import { projectsList } from "./projects.js";
 import Task from "./tasks.js";
@@ -17,11 +18,15 @@ function clearInputFields(titleInput, dateInput, priorityInput) {
 function displayProject(project) {
   const projectElement = document.createElement("li");
   projectElement.classList.add("project");
-  projectElement.dataset.index = projectsList.projects.indexOf(project);
 
   const projectTitle = document.createElement("p");
   projectTitle.classList.add("project-title");
-  projectTitle.textContent = `${project.title} (${project.dueDate})`;
+
+  const projectDate = document.getElementById("date-input");
+  const dueDate = parse(projectDate.value, "dd/MM/yyyy", new Date());
+  const formattedDate = format(dueDate, "dd/MM/yyyy");
+
+  projectTitle.textContent = `${project.title} (${formattedDate})`;
 
   const deleteBtn = document.createElement("button");
   deleteBtn.classList.add("delete-project-btn");
@@ -37,7 +42,7 @@ function displayProject(project) {
 
   // open project when clicked
   projectElement.addEventListener("click", () => {
-    openProject(project);
+    openProject(project, projectElement);
   });
 
   deleteBtn.addEventListener("click", (event) => {
@@ -57,28 +62,14 @@ function removeProject(projectElement, project) {
   // Remove the project and its tasks from the projects list array
   projectsList.deleteProject(project);
   project.tasks.length = 0;
-
   // remove project from project-list ul
   projectElement.remove();
-
   // remove tasks from task-list ul
   clearTaskListElement();
-
-  // update data indexes of remaining projects in list
-  updateProjectDataIndex(project);
-}
-
-function updateProjectDataIndex(project) {
-  const projectListUI = document.getElementById("project-list");
-  projectListUI.childNodes.forEach((projectNode, index) => {
-    projectNode.dataset.index = index;
-  });
-  console.log("projectslist array:", projectsList.projects);
-  console.log("this projects tasks:", project.tasks);
 }
 
 // open project
-function openProject(project) {
+function openProject(project, projectElement) {
   currentTab = project;
   console.log("current tab is:", currentTab);
   clearTaskListElement();
@@ -91,16 +82,12 @@ function openProject(project) {
   // Highlight the selected project
   const inboxBtn = document.getElementById("inbox-btn");
   const projectElements = document.querySelectorAll(".project");
-  projectElements.forEach((projectElement) => {
-    projectElement.classList.remove("current-tab");
-    if (
-      projectElement.dataset.index ===
-      projectsList.projects.indexOf(project).toString()
-    ) {
-      projectElement.classList.add("current-tab");
-      inboxBtn.classList.remove("current-tab");
-    }
+  projectElements.forEach((element) => {
+    element.classList.remove("current-tab");
   });
+
+  inboxBtn.classList.remove("current-tab");
+  projectElement.classList.add("current-tab");
 }
 
 // Create a new project
@@ -119,6 +106,13 @@ function addNewProject(event) {
   const title = titleInput.value;
   const dueDate = dueDateInput.value;
   const priority = priorityInput.value;
+
+  const parsedDueDate = parse(dueDate, "dd/MM/yyyy", new Date());
+  // Check if the due date is valid
+  if (!isValid(parsedDueDate)) {
+    alert("Please enter a valid due date in the format 'dd/mm/yyyy'");
+    return;
+  }
 
   if (title && dueDate && priority) {
     closeModal();
@@ -154,7 +148,7 @@ function displayTask(task) {
   taskTitle.textContent = `${task.title}`;
 
   const taskDate = document.createElement("p");
-  taskDate.classList.add("due-date");
+  taskDate.classList.add("task-date");
   taskDate.textContent = `${task.dueDate}`;
 
   const priority = document.createElement("p");
@@ -169,13 +163,20 @@ function displayTask(task) {
   taskList.append(taskItem);
 
   deleteTaskBtn.addEventListener("click", () => {
-    if (currentTab === null) {
-      inboxList.deleteTask(task);
-    } else {
-      currentTab.deleteTask(task);
-    }
-    taskItem.remove();
+    deleteTask(taskItem, task);
   });
+}
+
+function deleteTask(taskItem, task) {
+  // remove from inbox or project array
+  if (currentTab === null) {
+    inboxList.deleteTask(task);
+  } else {
+    currentTab.deleteTask(task);
+  }
+
+  // remove from task-list ul
+  taskItem.remove();
 }
 
 // Create a new task and add it to the project's tasks array or the inbox's tasks array
@@ -201,6 +202,10 @@ function closeTaskForm(event) {
   event.preventDefault();
   const taskDiv = document.querySelector(".task-div");
   taskDiv.style.display = "none";
+  const titleInput = document.getElementById("task-title");
+  const dueDateInput = document.getElementById("task-date");
+  const priorityInput = document.getElementById("task-priority");
+  clearInputFields(titleInput, dueDateInput, priorityInput);
 }
 
 // add task to project
@@ -273,6 +278,10 @@ function eventListeners() {
   // cancel task
   const cancelTaskButton = document.getElementById("cancel-task");
   cancelTaskButton.addEventListener("click", closeTaskForm);
+
+  // cancel project
+  const cancelProjectButton = document.getElementById("cancel-project");
+  cancelProjectButton.addEventListener("click", closeModal);
 }
 
 eventListeners();
