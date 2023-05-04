@@ -146,6 +146,7 @@ function displayTask(task) {
 
   const dueDate = parse(task.dueDate, "yyyy-MM-dd", new Date());
   const formattedDate = format(dueDate, "dd/MM/yyyy");
+
   const taskDueDate = document.createElement("p");
   taskDueDate.classList.add("task-due-date");
   taskDueDate.textContent = formattedDate;
@@ -158,14 +159,46 @@ function displayTask(task) {
   deleteTaskBtn.classList.add("delete-task");
   deleteTaskBtn.textContent = "Delete task";
 
-  taskItem.append(taskTitle, taskDueDate, priority, deleteTaskBtn);
+  const completeBtn = document.createElement("input");
+  completeBtn.classList.add("complete-btn");
+  completeBtn.setAttribute("type", "checkbox");
+
+  if (task.isCompleted) {
+    taskItem.classList.add("strike-through");
+    completeBtn.checked = true;
+  }
+
+  taskItem.append(taskTitle, taskDueDate, priority, deleteTaskBtn, completeBtn);
   taskList.append(taskItem);
+
+  // delete button and complete button
 
   deleteTaskBtn.addEventListener("click", () => {
     deleteTask(taskItem, task);
   });
+
+  completeBtn.addEventListener("click", () => {
+    completeTask(taskItem, task);
+  });
 }
 
+// cross task off as complete
+function completeTask(taskItem, task) {
+  // toggle completion in task class
+  task.toggleCompletion();
+
+  // cross item off in ui
+  if (task.isCompleted) {
+    taskItem.classList.add("strike-through");
+  } else {
+    taskItem.classList.remove("strike-through");
+  }
+
+  // save to local storage
+  saveToLocalStorage(projectsList, inboxList);
+}
+
+// delete task
 function deleteTask(taskItem, task) {
   // remove from inbox or project array
   if (currentTab === null) {
@@ -325,4 +358,3 @@ function initialize() {
 }
 
 initialize();
-
