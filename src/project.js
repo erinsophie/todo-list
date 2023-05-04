@@ -2,10 +2,9 @@ import Task from './tasks.js'
 import { projectsList } from "./projects.js";
 
 class Project {
-  constructor(title, dueDate, priority) {
+  constructor(title, dueDate) {
     this.title = title;
     this.dueDate = dueDate;
-    this.priority = priority;
     this.tasks = [];
     projectsList.addProject(this);
   }

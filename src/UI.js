@@ -9,6 +9,7 @@ let currentTab = null;
 // projects
 // Display the project on the page
 function displayProject(project) {
+  const projectListUI = document.getElementById("project-list");
   const projectElement = document.createElement("li");
   projectElement.classList.add("project");
 
@@ -25,8 +26,6 @@ function displayProject(project) {
   deleteBtn.textContent = "Delete";
 
   projectElement.append(projectTitle, deleteBtn);
-
-  const projectListUI = document.getElementById("project-list");
   projectListUI.appendChild(projectElement);
 
   console.log("list of projects:", projectsList.projects);
@@ -72,6 +71,7 @@ function openProject(project, projectElement) {
   currentTab = project;
   console.log("current tab is:", currentTab);
   clearTaskListElement();
+
   project.tasks.forEach((task) => {
     displayTask(task);
   });
@@ -87,8 +87,8 @@ function openProject(project, projectElement) {
 }
 
 // Create a new project
-function createProject(title, dueDate, priority) {
-  const project = new Project(title, dueDate, priority);
+function createProject(title, dueDate) {
+  const project = new Project(title, dueDate);
   displayProject(project);
   saveToLocalStorage(projectsList, inboxList);
 }
@@ -98,11 +98,9 @@ function addNewProject(event) {
   event.preventDefault();
   const titleInput = document.getElementById("title-input");
   const dueDateInput = document.getElementById("date-input");
-  const priorityInput = document.getElementById("priority-input");
 
   const title = titleInput.value;
   const dueDate = dueDateInput.value;
-  const priority = priorityInput.value;
 
   const parsedDueDate = parse(dueDate, "yyyy-MM-dd", new Date());
   // Check if the due date is valid
@@ -111,10 +109,10 @@ function addNewProject(event) {
     return;
   }
 
-  if (title && dueDate && priority) {
+  if (title && dueDate) {
     closeModal();
-    createProject(title, dueDate, priority);
-    clearInputFields(titleInput, dueDateInput, priorityInput);
+    createProject(title, dueDate);
+    clearInputFields(titleInput, dueDateInput);
   } else {
     alert("Please fill out all fields.");
   }
@@ -152,8 +150,15 @@ function displayTask(task) {
   taskDueDate.textContent = formattedDate;
 
   const priority = document.createElement("p");
-  priority.classList.add("priority-level");
-  priority.textContent = `${task.priority}`;
+  priority.classList.add("priority");
+
+  if (task.priority === "Low") {
+    priority.classList.add("priority-low");
+  } else if (task.priority === "Medium") {
+    priority.classList.add("priority-medium");
+  } else {
+    priority.classList.add("priority-high");
+  }
 
   const deleteTaskBtn = document.createElement("button");
   deleteTaskBtn.classList.add("delete-task");
@@ -282,9 +287,15 @@ function closeTaskForm(event) {
 // functions for both projects and tasks
 
 function clearInputFields(titleInput, dateInput, priorityInput) {
-  titleInput.value = "";
-  dateInput.value = "";
-  priorityInput.value = "";
+  if (titleInput) {
+    titleInput.value = "";
+  }
+  if (dateInput) {
+    dateInput.value = "";
+  }
+  if (priorityInput) {
+    priorityInput.value = "";
+  }
 }
 
 // open inbox
@@ -338,8 +349,6 @@ function eventListeners() {
   const cancelProjectButton = document.getElementById("cancel-project");
   cancelProjectButton.addEventListener("click", closeModal);
 }
-
-eventListeners();
 
 // load projects from local storage
 function initialize() {
