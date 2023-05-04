@@ -2,6 +2,7 @@ import { format, parse, isValid } from "date-fns";
 import Project from "./project.js";
 import { projectsList } from "./projects.js";
 import { inboxList } from "./inbox.js";
+import { saveToLocalStorage, loadFromLocalStorage } from "./storage.js";
 
 let currentTab = null;
 
@@ -14,8 +15,7 @@ function displayProject(project) {
   const projectTitle = document.createElement("p");
   projectTitle.classList.add("project-title");
 
-  const projectDate = document.getElementById("date-input");
-  const dueDate = parse(projectDate.value, "dd/MM/yyyy", new Date());
+  const dueDate = parse(project.dueDate, "yyyy-MM-dd", new Date());
   const formattedDate = format(dueDate, "dd/MM/yyyy");
 
   projectTitle.textContent = `${project.title} (${formattedDate})`;
@@ -30,7 +30,6 @@ function displayProject(project) {
   projectListUI.appendChild(projectElement);
 
   console.log("list of projects:", projectsList.projects);
-  console.log("this projects tasks:", project.tasks);
 
   // open project when clicked
   projectElement.addEventListener("click", () => {
@@ -54,10 +53,18 @@ function removeProject(projectElement, project) {
   // Remove the project and its tasks from the projects list array
   projectsList.deleteProject(project);
   project.tasks.length = 0;
+
   // remove project from project-list ul
   projectElement.remove();
+
   // remove tasks from task-list ul
   clearTaskListElement();
+
+  // call local storage
+  saveToLocalStorage(projectsList, inboxList);
+
+  console.log("list of projects:", projectsList.projects);
+  console.log("this projects tasks:", project);
 }
 
 // open project and highlight the selected project
@@ -65,8 +72,6 @@ function openProject(project, projectElement) {
   currentTab = project;
   console.log("current tab is:", currentTab);
   clearTaskListElement();
-
-  // Display tasks associated with the clicked project
   project.tasks.forEach((task) => {
     displayTask(task);
   });
@@ -85,6 +90,7 @@ function openProject(project, projectElement) {
 function createProject(title, dueDate, priority) {
   const project = new Project(title, dueDate, priority);
   displayProject(project);
+  saveToLocalStorage(projectsList, inboxList);
 }
 
 // Handle creating a new project
@@ -98,7 +104,7 @@ function addNewProject(event) {
   const dueDate = dueDateInput.value;
   const priority = priorityInput.value;
 
-  const parsedDueDate = parse(dueDate, "dd/MM/yyyy", new Date());
+  const parsedDueDate = parse(dueDate, "yyyy-MM-dd", new Date());
   // Check if the due date is valid
   if (!isValid(parsedDueDate)) {
     alert("Please enter a valid due date in the format 'dd/mm/yyyy'");
@@ -138,7 +144,7 @@ function displayTask(task) {
   taskTitle.classList.add("task-title");
   taskTitle.textContent = `${task.title}`;
 
-  const dueDate = parse(task.dueDate, "dd/MM/yyyy", new Date());
+  const dueDate = parse(task.dueDate, "yyyy-MM-dd", new Date());
   const formattedDate = format(dueDate, "dd/MM/yyyy");
   const taskDueDate = document.createElement("p");
   taskDueDate.classList.add("task-due-date");
@@ -173,6 +179,9 @@ function deleteTask(taskItem, task) {
   if (currentTab !== null) {
     console.log("current projects tasks:", currentTab.tasks);
   }
+
+  // save to local storage
+  saveToLocalStorage(projectsList, inboxList);
 }
 
 // Create a new task and add it to the project's tasks array or the inbox's tasks array
@@ -181,12 +190,13 @@ function createTask(title, dueDate, priority, project = null) {
 
   if (project) {
     task = project.addTask(title, dueDate, priority);
-    console.log("task added to project:", project.tasks);
+    console.log("task added to this project:", project);
   } else {
     task = inboxList.addTask(title, dueDate, priority);
     console.log("task added to inbox:", inboxList.tasks);
   }
   displayTask(task);
+  saveToLocalStorage(projectsList, inboxList);
 }
 
 // add task to project
@@ -202,7 +212,7 @@ function addTaskToProject(event) {
   const dueDate = dueDateInput.value;
   const priority = priorityInput.value;
 
-  const parsedDueDate = parse(dueDate, "dd/MM/yyyy", new Date());
+  const parsedDueDate = parse(dueDate, "yyyy-MM-dd", new Date());
   // Check if the due date is valid
   if (!isValid(parsedDueDate)) {
     alert("Please enter a valid due date in the format 'dd/mm/yyyy'");
@@ -298,13 +308,21 @@ function eventListeners() {
 
 eventListeners();
 
-// Display tasks from the inbox by default
+// load projects from local storage
 function initialize() {
   eventListeners();
+  loadFromLocalStorage();
 
+  // Display inbox tasks
   inboxList.tasks.forEach((task) => {
     displayTask(task);
+  });
+
+  // Display saved projects and their tasks
+  projectsList.projects.forEach((project) => {
+    displayProject(project);
   });
 }
 
 initialize();
+
