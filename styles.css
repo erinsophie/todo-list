@@ -2,12 +2,30 @@
   text-decoration: line-through;
 }
 
+.priority {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+}
+
+.priority-low {
+  background-color: green;
+}
+
+.priority-medium {
+  background-color: orange;
+}
+
+.priority-high {
+  background-color: red;
+}
+
 .task-list-container {
-    border: 1px solid red;
+  border: 1px solid red;
 }
 
 .project {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .modal {
