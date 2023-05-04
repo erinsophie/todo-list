@@ -5,19 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.io" />
     <title>Todo List</title>
   </head>
 
   <body>
     <div class="content">
-
       <main class="main">
         <!---- side bar ---->
         <nav class="sidebar">
-          <button id="inbox-btn">Inbox</button>
+          <button id="inbox-btn">
+            <i class="fa-solid fa-house icon"></i>Inbox
+          </button>
           <p class="sidebar-title">List of projects:</p>
           <button id="create-project-btn">Add Project +</button>
           <div class="project-list-container">
@@ -36,17 +48,24 @@
 
         <!---- project modal ---->
         <div class="modal">
+          <div class="modal-title">
+            <p>New project</p>
+          </div>
           <form id="modal-form">
-            <p class="message">New project</p>
-
+            <div>
             <label for="title-input">Name:</label>
             <input id="title-input" type="text" />
+          </div>
 
+          <div>
             <label for="date-input">Due date:</label>
             <input id="date-input" type="date" placeholder="dd/mm/yyyy" />
+          </div>
 
-            <button id="add-project-btn">Add</button>
-            <button id="cancel-project">Cancel</button>
+            <div class="modal-btn-container">
+              <button id="add-project-btn">Add</button>
+              <button id="cancel-project">Cancel</button>
+            </div>
           </form>
         </div>
 
