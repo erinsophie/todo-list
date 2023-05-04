@@ -1,3 +1,158 @@
+/* css reset */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Manrope", sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* general */
+
+:root {
+  --light-grey: rgba(220, 220, 220, 0.5);
+  --dark-grey: rgba(184, 184, 184, 0.5);
+  --white: #FFFFFF;
+  --standard-font: 1.1rem;
+}
+
+/* main */
+
+body {
+  background-image: url(img/background.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.main {
+  display: flex;
+  height: 100vh;
+  overflow: auto;
+  font-size: var(--standard-font);
+  color: var(--white);
+}
+
+button {
+  cursor: pointer;
+  background-color: var(--light-grey);
+  border: none;
+  border-radius: 10px; 
+  padding: 5px;
+}
+
+/* sidebar */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  width: 20%;
+  background-color: var(--dark-grey)
+}
+
+#inbox-btn {
+  margin-bottom: 30px;
+}
+
+#create-project-btn {
+  background: transparent;
+}
+
+.sidebar-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+/* projects */
+
+.current-tab {
+  background-color: rgba(161, 161, 161, 0.5)
+}
+
+.project {
+  cursor: pointer;
+}
+
+#project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#project-list li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  padding: 5px;
+  list-style-type: none;
+  background-color: var(--light-grey)
+}
+
+.delete-project-btn {
+  height: 30px;
+  background: transparent;
+}
+
+/* tasks */
+
+.task-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.task-display {
+  flex: 1;
+}
+
+.task-list-container {
+  
+}
+
+.task-div {
+  display: none;
+}
+
 .strike-through {
   text-decoration: line-through;
 }
@@ -20,13 +175,7 @@
   background-color: red;
 }
 
-.task-list-container {
-  border: 1px solid red;
-}
-
-.project {
-  cursor: pointer;
-}
+/* modal */
 
 .modal {
   display: flex;
@@ -65,10 +214,3 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.task-div {
-  display: none;
-}
-
-.current-tab {
-  background-color: lightgray;
-}

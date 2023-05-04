@@ -5,6 +5,7 @@ import { inboxList } from "./inbox.js";
 import { saveToLocalStorage, loadFromLocalStorage } from "./storage.js";
 
 let currentTab = null;
+setProjectTitle();
 
 // projects
 // Display the project on the page
@@ -69,6 +70,8 @@ function removeProject(projectElement, project) {
 // open project and highlight the selected project
 function openProject(project, projectElement) {
   currentTab = project;
+  setProjectTitle();
+
   console.log("current tab is:", currentTab);
   clearTaskListElement();
 
@@ -298,9 +301,22 @@ function clearInputFields(titleInput, dateInput, priorityInput) {
   }
 }
 
+// set project title when opened
+function setProjectTitle() {
+  const currentProject = document.getElementById('current-project');
+
+  if (currentTab) {
+    currentProject.textContent = currentTab.title;
+  } else {
+    currentProject.textContent = 'Inbox';
+  }
+}
+
 // open inbox
 function openInbox() {
   currentTab = null;
+  setProjectTitle();
+
   console.log("current tab is index", currentTab);
   clearTaskListElement();
 
