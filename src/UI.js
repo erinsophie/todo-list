@@ -5,7 +5,6 @@ import { inboxList } from "./inbox.js";
 import { saveToLocalStorage, loadFromLocalStorage } from "./storage.js";
 
 let currentTab = null;
-setProjectTitle();
 
 // projects
 // Display the project on the page
@@ -24,7 +23,7 @@ function displayProject(project) {
 
   const deleteBtn = document.createElement("button");
   deleteBtn.classList.add("delete-project-btn");
-  deleteBtn.textContent = "Delete";
+  deleteBtn.innerHTML = '<i class="fa-solid fa-x"></i>';
 
   projectElement.append(projectTitle, deleteBtn);
   projectListUI.appendChild(projectElement);
@@ -303,12 +302,12 @@ function clearInputFields(titleInput, dateInput, priorityInput) {
 
 // set project title when opened
 function setProjectTitle() {
-  const currentProject = document.getElementById('current-project');
+  const currentProject = document.getElementById("current-project");
 
   if (currentTab) {
     currentProject.textContent = currentTab.title;
   } else {
-    currentProject.textContent = 'Inbox';
+    currentProject.textContent = "Inbox";
   }
 }
 
