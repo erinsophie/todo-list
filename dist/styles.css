@@ -49,6 +49,7 @@ h6 {
 :root {
   --light-grey: rgba(220, 220, 220, 0.5);
   --dark-grey: rgba(184, 184, 184, 0.5);
+  --current-tab: rgba(58, 58, 58, 0.3);
   --white: #ffffff;
   --standard-font: 1.1rem;
 }
@@ -97,6 +98,10 @@ button,
   gap: 15px;
 }
 
+.project:hover, .task-item:hover, button:hover {
+  background-color: var(--current-tab);
+}
+
 /* sidebar */
 
 .sidebar {
@@ -129,7 +134,7 @@ button,
 /* projects */
 
 .current-tab {
-  background-color: rgba(79, 79, 79, 0.5);
+  background-color: var(--current-tab);
 }
 
 .project,
@@ -154,6 +159,12 @@ button,
   background: transparent;
   padding: 0;
 }
+
+.delete-project-btn:hover,
+.delete-task:hover {
+  background: transparent;
+}
+
 
 /* tasks */
 
