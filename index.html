@@ -27,9 +27,17 @@
       <main class="main">
         <!---- side bar ---->
         <nav class="sidebar">
-          <button id="inbox-btn">
-            <i class="fa-solid fa-house icon"></i>Inbox
-          </button>
+          <div class="sidebar-btn-container">
+            <button id="inbox-btn">
+              <i class="fa-solid fa-house icon"></i>Inbox
+            </button>
+            <button id="inbox-btn">
+              <i class="fa-solid fa-list-check icon"></i>Today
+            </button>
+            <button id="inbox-btn">
+              <i class="fa-solid fa-calendar-days icon"></i>This week
+            </button>
+          </div>
           <p class="sidebar-title">List of projects:</p>
           <button id="create-project-btn">Add Project +</button>
           <div class="project-list-container">
@@ -46,7 +54,7 @@
           </div>
 
           <!---- task form ---->
-          <div class="task-div">
+          <div class="task-form-container">
             <form id="task-form">
               <div>
                 <label for="task-title">Task:</label>
