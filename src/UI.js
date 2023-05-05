@@ -67,6 +67,9 @@ const uiModule = (() => {
     // remove tasks from task-list ul
     clearTaskListElement();
 
+    // direct back to inbox tab
+    openInbox();
+
     // call local storage
     saveToLocalStorage(projectsList, inboxList);
 
@@ -260,7 +263,7 @@ const uiModule = (() => {
   // add task to project
   function addTaskToProject(event) {
     event.preventDefault();
-    const taskDiv = document.querySelector(".task-div");
+    const taskContainer = document.querySelector(".task-form-container");
 
     const titleInput = document.getElementById("task-title");
     const dueDateInput = document.getElementById("task-date");
@@ -278,7 +281,7 @@ const uiModule = (() => {
     }
 
     if (title && dueDate && priority) {
-      taskDiv.style.display = "none";
+      taskContainer.style.display = "none";
       createTask(title, dueDate, priority, currentTab);
       clearInputFields(titleInput, dueDateInput, priorityInput);
     } else {
@@ -288,15 +291,15 @@ const uiModule = (() => {
 
   // open task form
   function openTaskForm() {
-    const taskDiv = document.querySelector(".task-div");
-    taskDiv.style.display = "block";
+    const taskContainer = document.querySelector(".task-form-container");
+    taskContainer.style.display = "block";
   }
 
   // close task form
   function closeTaskForm(event) {
     event.preventDefault();
-    const taskDiv = document.querySelector(".task-div");
-    taskDiv.style.display = "none";
+    const taskContainer = document.querySelector(".task-form-container");
+    taskContainer.style.display = "none";
 
     const titleInput = document.getElementById("task-title");
     const dueDateInput = document.getElementById("task-date");
