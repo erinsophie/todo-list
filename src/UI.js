@@ -5,6 +5,11 @@ import { inboxList } from "./inbox.js";
 import { saveToLocalStorage, loadFromLocalStorage } from "./storage.js";
 
 let currentTab = null;
+setProjectTitle();
+
+function capitaliseLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 // projects
 // Display the project on the page
@@ -14,12 +19,12 @@ function displayProject(project) {
   projectElement.classList.add("project");
 
   const projectTitle = document.createElement("p");
-  projectTitle.classList.add("project-title");
+  const capitalisedTitle = capitaliseLetter(project.title);
 
   const dueDate = parse(project.dueDate, "yyyy-MM-dd", new Date());
   const formattedDate = format(dueDate, "dd/MM/yyyy");
 
-  projectTitle.textContent = `${project.title} (${formattedDate})`;
+  projectTitle.textContent = `${capitalisedTitle} (${formattedDate})`;
 
   const deleteBtn = document.createElement("button");
   deleteBtn.classList.add("delete-project-btn");
@@ -124,12 +129,16 @@ function addNewProject(event) {
 function openModal() {
   const modal = document.querySelector(".modal");
   modal.classList.add("active");
+  const overlay = document.querySelector(".overlay");
+  overlay.classList.add("active");
 }
 
 // close modal
 function closeModal() {
   const modal = document.querySelector(".modal");
   modal.classList.remove("active");
+  const overlay = document.querySelector(".overlay");
+  overlay.classList.remove("active");
 }
 
 /// /////////////////////////////////////////////////////////////
@@ -139,10 +148,17 @@ function closeModal() {
 function displayTask(task) {
   const taskList = document.getElementById("task-list");
   const taskItem = document.createElement("li");
+  taskItem.classList.add("task-item");
+
+  const container1 = document.createElement("div");
+  container1.classList.add("container1");
+  const container2 = document.createElement("div");
+  container2.classList.add("container2");
 
   const taskTitle = document.createElement("p");
   taskTitle.classList.add("task-title");
-  taskTitle.textContent = `${task.title}`;
+  const capitalisedTitle = capitaliseLetter(task.title)
+  taskTitle.textContent = `${capitalisedTitle}`;
 
   const dueDate = parse(task.dueDate, "yyyy-MM-dd", new Date());
   const formattedDate = format(dueDate, "dd/MM/yyyy");
@@ -164,7 +180,7 @@ function displayTask(task) {
 
   const deleteTaskBtn = document.createElement("button");
   deleteTaskBtn.classList.add("delete-task");
-  deleteTaskBtn.textContent = "Delete task";
+  deleteTaskBtn.innerHTML = '<i class="fa-solid fa-x"></i>';
 
   const completeBtn = document.createElement("input");
   completeBtn.classList.add("complete-btn");
@@ -175,32 +191,33 @@ function displayTask(task) {
     completeBtn.checked = true;
   }
 
-  taskItem.append(taskTitle, taskDueDate, priority, deleteTaskBtn, completeBtn);
+  container1.append(completeBtn, taskTitle);
+  container2.append(formattedDate, priority, deleteTaskBtn);
+
+  taskItem.append(container1, container2);
   taskList.append(taskItem);
 
   // delete button and complete button
-
   deleteTaskBtn.addEventListener("click", () => {
     deleteTask(taskItem, task);
   });
 
   completeBtn.addEventListener("click", () => {
-    completeTask(taskItem, task);
+    completeTask(taskTitle, task);
   });
 }
 
-// cross task off as complete
-function completeTask(taskItem, task) {
+// complete task
+function completeTask(taskTitle, task) {
   // toggle completion in task class
   task.toggleCompletion();
 
   // cross item off in ui
   if (task.isCompleted) {
-    taskItem.classList.add("strike-through");
+    taskTitle.classList.add("strike-through");
   } else {
-    taskItem.classList.remove("strike-through");
+    taskTitle.classList.remove("strike-through");
   }
-
   // save to local storage
   saveToLocalStorage(projectsList, inboxList);
 }
@@ -279,6 +296,7 @@ function closeTaskForm(event) {
   event.preventDefault();
   const taskDiv = document.querySelector(".task-div");
   taskDiv.style.display = "none";
+
   const titleInput = document.getElementById("task-title");
   const dueDateInput = document.getElementById("task-date");
   const priorityInput = document.getElementById("task-priority");

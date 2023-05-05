@@ -36,11 +36,39 @@
             <ul id="project-list"></ul>
           </div>
         </nav>
+
         <!---- tasks ---->
         <div class="task-display">
           <p id="current-project"></p>
-          <p class="task-title">Tasks</p>
-          <button id="add-task-btn">Add Task</button>
+          <p class="task-header">Tasks</p>
+          <div>
+            <button id="add-task-btn">Add Task +</button>
+          </div>
+
+          <!---- task form ---->
+          <div class="task-div">
+            <form id="task-form">
+              <div>
+                <label for="task-title">Task:</label>
+                <input id="task-title" type="text" />
+
+                <label for="task-date">Due date:</label>
+                <input id="task-date" type="date" placeholder="dd/mm/yyyy" />
+              </div>
+              <div>
+                <label for="task-priority">Priority:</label>
+                <select id="task-priority" name="priority">
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+
+                <button id="cancel-task">Cancel</button>
+                <button id="add-task-to-project">Add</button>
+              </div>
+            </form>
+          </div>
+
           <div class="task-list-container">
             <ul id="task-list"></ul>
           </div>
@@ -53,40 +81,19 @@
           </div>
           <form id="modal-form">
             <div>
-            <label for="title-input">Name:</label>
-            <input id="title-input" type="text" />
-          </div>
+              <label for="title-input">Name:</label>
+              <input id="title-input" type="text" />
+            </div>
 
-          <div>
-            <label for="date-input">Due date:</label>
-            <input id="date-input" type="date" placeholder="dd/mm/yyyy" />
-          </div>
+            <div>
+              <label for="date-input">Due date:</label>
+              <input id="date-input" type="date" placeholder="dd/mm/yyyy" />
+            </div>
 
             <div class="modal-btn-container">
               <button id="add-project-btn">Add</button>
               <button id="cancel-project">Cancel</button>
             </div>
-          </form>
-        </div>
-
-        <!---- task form ---->
-        <div class="task-div">
-          <form id="task-form">
-            <label for="task-title">Task:</label>
-            <input id="task-title" type="text" />
-
-            <label for="task-date">Due date:</label>
-            <input id="task-date" type="date" placeholder="dd/mm/yyyy" />
-
-            <label for="task-priority">Priority:</label>
-            <select id="task-priority" name="priority">
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select>
-
-            <button id="add-task-to-project">Add</button>
-            <button id="cancel-task">Cancel</button>
           </form>
         </div>
 
