@@ -16,5 +16,4 @@ class Task {
     this.priority = newPriority;
   }
 }
-
 export default Task;

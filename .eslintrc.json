@@ -1,20 +1,17 @@
 {
     "env": {
-        "browser": true,
-        "commonjs": true,
-        "es2021": true
+      "browser": true,
+      "commonjs": true,
+      "es2021": true
     },
-    "extends": "airbnb-base",
-    "overrides": [
-    ],
+    "extends": ["airbnb-base", "prettier"],
+    "overrides": [],
     "parserOptions": {
-        "ecmaVersion": "latest"
+      "ecmaVersion": "latest"
     },
     "rules": {
-        "no-console": "off",
-        "quotes": [
-            "error",
-            "single"
-        ]
+      "no-console": "off",
+      "quotes": ["error", "single"],
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
-}
+  }
