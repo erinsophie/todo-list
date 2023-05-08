@@ -17,6 +17,10 @@ export class Inbox {
       this.tasks.splice(index, 1);
     }
   }
+
+  getAllTasks() {
+    return this.tasks;
+  }
 }
 
 export const inboxList = new Inbox();

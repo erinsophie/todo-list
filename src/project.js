@@ -1,5 +1,5 @@
-import Task from './tasks.js'
-import { projectsList } from "./projects.js";
+import Task from './tasks.js';
+import { projectsList } from './projects.js';
 
 class Project {
   constructor(title, dueDate) {
@@ -20,6 +20,10 @@ class Project {
     if (index !== -1) {
       this.tasks.splice(index, 1);
     }
+  }
+  
+  getAllTasks() {
+    return this.tasks;
   }
 }
 

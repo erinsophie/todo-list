@@ -3,6 +3,12 @@ import Project from './project.js';
 import { projectsList } from './projects.js';
 import { inboxList } from './inbox.js';
 import { saveToLocalStorage, loadFromLocalStorage } from './storage.js';
+import {
+  getAllTasks,
+  getTasksDueToday,
+  getTasksDueThisWeek,
+  differenceInDays,
+} from './tasks.js';
 
 // IIFE that exposes initialise function only
 const uiModule = (() => {
@@ -81,6 +87,7 @@ const uiModule = (() => {
   function openProject(project, projectElement) {
     currentTab = project;
     setProjectTitle();
+    showAddTaskBtn();
 
     console.log('current tab is:', currentTab);
     clearTaskListElement();
@@ -173,14 +180,7 @@ const uiModule = (() => {
 
     const priority = document.createElement('p');
     priority.classList.add('priority');
-
-    if (task.priority === 'Low') {
-      priority.classList.add('priority-low');
-    } else if (task.priority === 'Medium') {
-      priority.classList.add('priority-medium');
-    } else {
-      priority.classList.add('priority-high');
-    }
+    setTaskPriority(task, priority);
 
     const deleteTaskBtn = document.createElement('button');
     deleteTaskBtn.classList.add('delete-task');
@@ -189,11 +189,7 @@ const uiModule = (() => {
     const completeBtn = document.createElement('input');
     completeBtn.classList.add('complete-btn');
     completeBtn.setAttribute('type', 'checkbox');
-
-    if (task.isCompleted) {
-      taskTitle.classList.add('strike-through');
-      completeBtn.checked = true;
-    }
+    setTaskAsComplete(task, taskTitle, completeBtn)
 
     container1.append(completeBtn, taskTitle);
     container2.append(formattedDate, priority, deleteTaskBtn);
@@ -209,6 +205,25 @@ const uiModule = (() => {
     completeBtn.addEventListener('click', () => {
       completeTask(taskTitle, task);
     });
+  }
+
+  // task priority
+  function setTaskPriority(task, priority) {
+    if (task.priority === 'Low') {
+      priority.classList.add('priority-low');
+    } else if (task.priority === 'Medium') {
+      priority.classList.add('priority-medium');
+    } else {
+      priority.classList.add('priority-high');
+    }
+  }
+
+  // set task as complete 
+  function setTaskAsComplete(task, taskTitle, completeBtn) {
+    if (task.isCompleted) {
+      taskTitle.classList.add('strike-through');
+      completeBtn.checked = true;
+    }
   }
 
   // complete task
@@ -320,21 +335,11 @@ const uiModule = (() => {
     }
   }
 
-  // set project title when opened
-  function setProjectTitle() {
-    const currentProject = document.getElementById('current-project');
-
-    if (currentTab) {
-      currentProject.textContent = capitaliseLetter(currentTab.title);
-    } else {
-      currentProject.textContent = 'Inbox';
-    }
-  }
-
   // open inbox
   function openInbox() {
     currentTab = null;
     setProjectTitle();
+    showAddTaskBtn();
 
     console.log('current tab is index', currentTab);
     clearTaskListElement();
@@ -354,6 +359,57 @@ const uiModule = (() => {
 
     inboxBtn.classList.add('current-tab');
     console.log('inbox tasks:', inboxList.tasks);
+  }
+
+  // set project title when opened
+  function setProjectTitle() {
+    const currentProject = document.getElementById('current-project');
+
+    if (currentTab) {
+      currentProject.textContent = capitaliseLetter(currentTab.title);
+    } else {
+      currentProject.textContent = 'Inbox';
+    }
+  }
+
+  // hide add task button
+  function hideAddTaskBtn() {
+    const addTaskBtn = document.getElementById('add-task-btn');
+    addTaskBtn.style.display = 'none';
+  }
+
+  function showAddTaskBtn() {
+    const addTaskBtn = document.getElementById('add-task-btn');
+    addTaskBtn.style.display = 'block';
+  }
+
+  // display tasks due today
+  function displayTodaysTasks() {
+    clearTaskListElement();
+    hideAddTaskBtn();
+    const title = document.getElementById('current-project');
+    title.textContent = 'Tasks due today';
+
+    const todaysTasks = getTasksDueToday();
+    todaysTasks.forEach((task) => displayTask(task));
+  }
+
+  // display tasks due this week
+  function displayThisWeeksTasks() {
+    clearTaskListElement();
+    hideAddTaskBtn();
+    const title = document.getElementById('current-project');
+    title.textContent = 'Tasks due this week';
+
+    const thisWeeksTasks = getTasksDueThisWeek();
+    thisWeeksTasks.forEach((task) => displayTask(task));
+  }
+
+  // The function that returns the remaining days for a task
+  function getRemainingDays(taskDueDate) {
+    const today = new Date();
+    const dueDate = parseISO(taskDueDate);
+    return differenceInDays(dueDate, today);
   }
 
   // event listeners
@@ -385,6 +441,14 @@ const uiModule = (() => {
     // cancel project
     const cancelProjectButton = document.getElementById('cancel-project');
     cancelProjectButton.addEventListener('click', closeModal);
+
+    // open todays tasks
+    const todayBtn = document.getElementById('today-btn');
+    todayBtn.addEventListener('click', displayTodaysTasks);
+
+    // open this weeks tasks
+    const thisWeekBtn = document.getElementById('this-week-btn');
+    thisWeekBtn.addEventListener('click', displayThisWeeksTasks);
   }
 
   // load projects from local storage
