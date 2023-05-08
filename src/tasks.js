@@ -13,12 +13,6 @@ class Task {
   toggleCompletion() {
     this.isCompleted = !this.isCompleted;
   }
-
-  edit(newTitle, newDueDate, newPriority) {
-    this.title = newTitle;
-    this.dueDate = newDueDate;
-    this.priority = newPriority;
-  }
 }
 
 function getAllTasks() {
@@ -35,7 +29,7 @@ function getTasksDueToday() {
 function getTasksDueThisWeek() {
   const allTasks = getAllTasks();
 
-  return allTasks.filter(task => {
+  return allTasks.filter((task) => {
     const taskDueDate = parseISO(task.dueDate);
     return isThisWeek(taskDueDate, { weekStartsOn: 0 });
   });
