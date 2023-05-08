@@ -1,14 +1,15 @@
-import { format, parse, isValid } from 'date-fns';
+import {
+  format,
+  parse,
+  isValid,
+  parseISO,
+  differenceInCalendarDays,
+} from 'date-fns';
 import Project from './project.js';
 import { projectsList } from './projects.js';
 import { inboxList } from './inbox.js';
 import { saveToLocalStorage, loadFromLocalStorage } from './storage.js';
-import {
-  getAllTasks,
-  getTasksDueToday,
-  getTasksDueThisWeek,
-  differenceInDays,
-} from './tasks.js';
+import { getTasksDueToday, getTasksDueThisWeek } from './tasks.js';
 
 // IIFE that exposes initialise function only
 const uiModule = (() => {
@@ -50,8 +51,8 @@ const uiModule = (() => {
     });
 
     deleteBtn.addEventListener('click', (event) => {
-      event.stopPropagation(); // Prevent triggering the click event on the projectElement
-      removeProject(projectElement, project);
+      event.stopPropagation();
+      removeProject(project, projectElement);
     });
   }
 
@@ -62,7 +63,7 @@ const uiModule = (() => {
   }
 
   // remove project
-  function removeProject(projectElement, project) {
+  function removeProject(project, projectElement) {
     // Remove the project and its tasks from the projects list array
     projectsList.deleteProject(project);
     project.tasks.length = 0;
@@ -84,26 +85,17 @@ const uiModule = (() => {
   }
 
   // open project and highlight the selected project
-  function openProject(project, projectElement) {
+  function openProject(project) {
     currentTab = project;
     setProjectTitle();
     showAddTaskBtn();
-
-    console.log('current tab is:', currentTab);
     clearTaskListElement();
+    console.log('current tab is:', currentTab);
 
     project.tasks.forEach((task) => {
-      displayTask(task);
+      const remainingDays = getRemainingDays(task.dueDate);
+      displayTask(task, remainingDays);
     });
-
-    const inboxBtn = document.getElementById('inbox-btn');
-    const projectElements = document.querySelectorAll('.project');
-    projectElements.forEach((element) => {
-      element.classList.remove('current-tab');
-    });
-
-    inboxBtn.classList.remove('current-tab');
-    projectElement.classList.add('current-tab');
   }
 
   // Create a new project
@@ -156,7 +148,7 @@ const uiModule = (() => {
 
   // tasks
   // display task
-  function displayTask(task) {
+  function displayTask(task, remainingDays) {
     const taskList = document.getElementById('task-list');
     const taskItem = document.createElement('li');
     taskItem.classList.add('task-item');
@@ -171,6 +163,13 @@ const uiModule = (() => {
     const capitalisedTitle = capitaliseLetter(task.title);
     taskTitle.textContent = `${capitalisedTitle}`;
 
+    const daysLeft = document.createElement('p');
+    if(remainingDays === 0) {
+      daysLeft.textContent = '(Due today)';
+    } else {
+      daysLeft.textContent = `(${remainingDays} days left)`;
+    }
+    
     const dueDate = parse(task.dueDate, 'yyyy-MM-dd', new Date());
     const formattedDate = format(dueDate, 'dd/MM/yyyy');
 
@@ -189,10 +188,10 @@ const uiModule = (() => {
     const completeBtn = document.createElement('input');
     completeBtn.classList.add('complete-btn');
     completeBtn.setAttribute('type', 'checkbox');
-    setTaskAsComplete(task, taskTitle, completeBtn)
+    setTaskAsComplete(task, taskTitle, completeBtn);
 
     container1.append(completeBtn, taskTitle);
-    container2.append(formattedDate, priority, deleteTaskBtn);
+    container2.append(daysLeft, formattedDate, priority, deleteTaskBtn);
 
     taskItem.append(container1, container2);
     taskList.append(taskItem);
@@ -207,6 +206,13 @@ const uiModule = (() => {
     });
   }
 
+  // remaining days
+  function getRemainingDays(taskDueDate) {
+    const today = new Date();
+    const dueDate = parseISO(taskDueDate);
+    return differenceInCalendarDays(dueDate, today);
+  }
+
   // task priority
   function setTaskPriority(task, priority) {
     if (task.priority === 'Low') {
@@ -218,7 +224,7 @@ const uiModule = (() => {
     }
   }
 
-  // set task as complete 
+  // set task as complete
   function setTaskAsComplete(task, taskTitle, completeBtn) {
     if (task.isCompleted) {
       taskTitle.classList.add('strike-through');
@@ -270,7 +276,9 @@ const uiModule = (() => {
       task = inboxList.addTask(title, dueDate, priority);
       console.log('task added to inbox:', inboxList.tasks);
     }
-    displayTask(task);
+
+    const remainingDays = getRemainingDays(task.dueDate);
+    displayTask(task, remainingDays);
     saveToLocalStorage(projectsList, inboxList);
   }
 
@@ -340,25 +348,14 @@ const uiModule = (() => {
     currentTab = null;
     setProjectTitle();
     showAddTaskBtn();
-
-    console.log('current tab is index', currentTab);
     clearTaskListElement();
+    console.log('current tab is index', currentTab);
 
     // Display tasks from the inbox
     inboxList.tasks.forEach((task) => {
-      displayTask(task);
+      const remainingDays = getRemainingDays(task.dueDate);
+      displayTask(task, remainingDays);
     });
-
-    // Highlight the inbox
-    const inboxBtn = document.getElementById('inbox-btn');
-
-    const projectElements = document.querySelectorAll('.project');
-    projectElements.forEach((projectElement) => {
-      projectElement.classList.remove('current-tab');
-    });
-
-    inboxBtn.classList.add('current-tab');
-    console.log('inbox tasks:', inboxList.tasks);
   }
 
   // set project title when opened
@@ -391,7 +388,10 @@ const uiModule = (() => {
     title.textContent = 'Tasks due today';
 
     const todaysTasks = getTasksDueToday();
-    todaysTasks.forEach((task) => displayTask(task));
+    todaysTasks.forEach((task) => {
+      const remainingDays = getRemainingDays(task.dueDate);
+      displayTask(task, remainingDays);
+    });
   }
 
   // display tasks due this week
@@ -402,14 +402,10 @@ const uiModule = (() => {
     title.textContent = 'Tasks due this week';
 
     const thisWeeksTasks = getTasksDueThisWeek();
-    thisWeeksTasks.forEach((task) => displayTask(task));
-  }
-
-  // The function that returns the remaining days for a task
-  function getRemainingDays(taskDueDate) {
-    const today = new Date();
-    const dueDate = parseISO(taskDueDate);
-    return differenceInDays(dueDate, today);
+    thisWeeksTasks.forEach((task) => {
+      const remainingDays = getRemainingDays(task.dueDate);
+      displayTask(task, remainingDays);
+    });
   }
 
   // event listeners
@@ -458,7 +454,8 @@ const uiModule = (() => {
 
     // Display inbox tasks
     inboxList.tasks.forEach((task) => {
-      displayTask(task);
+      const remainingDays = getRemainingDays(task.dueDate);
+      displayTask(task, remainingDays);
     });
 
     // Display saved projects and their tasks
