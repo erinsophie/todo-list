@@ -106,6 +106,10 @@ button:hover {
   background-color: var(--current-tab);
 }
 
+button:focus {
+  background-color: var(--current-tab);
+}
+
 /* sidebar */
 
 .sidebar {
@@ -321,6 +325,7 @@ input {
   outline: none;
   border-bottom: 1px solid var(--white);
 }
+
 
 /* media query for larger screens */
 
