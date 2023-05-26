@@ -329,7 +329,7 @@ input {
 
 /* media query for larger screens */
 
-@media (min-width: 800px) {
+@media (min-width: 700px) {
   .main {
     flex-direction: row;
   }
