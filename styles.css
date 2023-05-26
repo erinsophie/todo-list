@@ -44,7 +44,7 @@ h6 {
   overflow-wrap: break-word;
 }
 
-/* general */
+/* root */
 
 :root {
   --light-grey: rgba(220, 220, 220, 0.5);
