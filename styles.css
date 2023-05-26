@@ -9,7 +9,7 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
 }
 
 html,
@@ -217,7 +217,7 @@ button:focus {
   gap: 10px;
 }
 
-/* task form */
+/* form */
 
 .task-form-container {
   display: none;
@@ -326,7 +326,6 @@ input {
   border-bottom: 1px solid var(--white);
 }
 
-
 /* desktop */
 
 @media (min-width: 700px) {
@@ -358,5 +357,4 @@ input {
     align-items: center;
     gap: 10px;
   }
- 
 }
