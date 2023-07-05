@@ -1,7 +1,7 @@
-import { projectsList } from "./projects.js";
-import { inboxList } from "./inbox.js";
-import Project from "./project.js";
-import Task from "./tasks.js";
+import { projectsList } from "./projects";
+import { inboxList } from "./inbox";
+import Project from "./project";
+import Task from "./tasks";
 
 const LOCAL_STORAGE_PROJECTS_KEY = "task.projects";
 const LOCAL_STORAGE_INBOX_KEY = "task.inbox";

@@ -1,5 +1,5 @@
-import { inboxList } from './inbox.js';
-import { projectsList } from './projects.js';
+import { inboxList } from './inbox';
+import { projectsList } from './projects';
 import { isToday, isThisWeek, parseISO } from 'date-fns';
 
 class Task {

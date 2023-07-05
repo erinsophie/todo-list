@@ -1,3 +1,3 @@
-import uiModule from './UI.js';
+import uiModule from './UI';
 
 document.addEventListener('DOMContentLoaded', uiModule.initialize);

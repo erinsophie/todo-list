@@ -5,11 +5,11 @@ import {
   parseISO,
   differenceInCalendarDays,
 } from 'date-fns';
-import Project from './project.js';
-import { projectsList } from './projects.js';
-import { inboxList } from './inbox.js';
-import { saveToLocalStorage, loadFromLocalStorage } from './storage.js';
-import { getTasksDueToday, getTasksDueThisWeek } from './tasks.js';
+import Project from './project';
+import { projectsList } from './projects';
+import { inboxList } from './inbox';
+import { saveToLocalStorage, loadFromLocalStorage } from './storage';
+import { getTasksDueToday, getTasksDueThisWeek } from './tasks';
 
 // IIFE that exposes initialise function only
 const uiModule = (() => {

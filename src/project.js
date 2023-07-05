@@ -1,5 +1,5 @@
-import Task from './tasks.js';
-import { projectsList } from './projects.js';
+import Task from './tasks';
+import { projectsList } from './projects';
 
 class Project {
   constructor(title, dueDate) {
