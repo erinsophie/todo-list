@@ -28,36 +28,36 @@
         <!---- side bar ---->
         <nav class="sidebar">
           <div class="sidebar-btn-container">
-            <button id="inbox-btn">
+            <button class="inbox-btn">
               <i class="fa-solid fa-house icon"></i>Inbox
             </button>
-            <button id="today-btn">
+            <button class="today-btn">
               <i class="fa-solid fa-list-check icon"></i>Today
             </button>
-            <button id="this-week-btn">
+            <button class="this-week-btn">
               <i class="fa-solid fa-calendar-days icon"></i>This week
             </button>
           </div>
           <p class="sidebar-title">List of projects:</p>
           <div>
-            <button id="create-project-btn">Add Project +</button>
+            <button class="create-project-btn">Add Project +</button>
           </div>
           <div class="project-list-container">
-            <ul id="project-list"></ul>
+            <ul class="project-list"></ul>
           </div>
         </nav>
 
         <!---- tasks ---->
         <div class="task-display">
-          <p id="current-project"></p>
+          <p class="current-project"></p>
           <p class="task-header">Tasks</p>
           <div>
-            <button id="add-task-btn">Add Task +</button>
+            <button class="add-task-btn">Add Task +</button>
           </div>
 
           <!---- task form ---->
           <div class="task-form-container">
-            <form id="task-form">
+            <form class="task-form">
               <div>
                 <label for="task-title">Task:</label>
                 <input id="task-title" type="text" />
@@ -73,14 +73,14 @@
                   <option value="High">High</option>
                 </select>
 
-                <button id="add-task-to-project">Add</button>
-                <button id="cancel-task">Cancel</button>
+                <button class="add-task-to-project">Add</button>
+                <button class="cancel-task">Cancel</button>
               </div>
             </form>
           </div>
 
           <div class="task-list-container">
-            <ul id="task-list"></ul>
+            <ul class="task-list"></ul>
           </div>
         </div>
 
@@ -89,7 +89,7 @@
           <div class="modal-title">
             <p>New project</p>
           </div>
-          <form id="modal-form">
+          <form class="modal-form">
             <div>
               <label for="title-input">Name:</label>
               <input id="title-input" type="text" />
@@ -101,8 +101,8 @@
             </div>
 
             <div class="modal-btn-container">
-              <button id="add-project-btn">Add</button>
-              <button id="cancel-project">Cancel</button>
+              <button class="add-project-btn">Add</button>
+              <button class="cancel-project">Cancel</button>
             </div>
           </form>
         </div>

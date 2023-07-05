@@ -86,15 +86,15 @@ button,
 .project,
 .task-item,
 .modal,
-#task-form {
+.task-form {
   border-radius: 10px;
   padding: 10px;
   background-color: var(--light-grey);
 }
 
-#task-list,
-#project-list,
-#modal-form,
+.task-list,
+.project-list,
+.modal-form,
 .modal-btn-container,
 .sidebar-btn-container {
   gap: 15px;
@@ -128,7 +128,7 @@ button:focus {
   margin-right: 5px;
 }
 
-#create-project-btn {
+.create-project-btn {
   background: transparent;
 }
 
@@ -148,7 +148,7 @@ button:focus {
   cursor: pointer;
 }
 
-#project-list {
+.project-list {
   display: flex;
   flex-direction: column;
   list-style-type: none;
@@ -173,7 +173,7 @@ button:focus {
 
 /* tasks */
 
-#current-project {
+.current-project {
   font-size: 1.8rem;
   font-weight: bold;
 }
@@ -194,7 +194,7 @@ button:focus {
   margin-top: 20px;
 }
 
-#task-list {
+.task-list {
   list-style-type: none;
   display: flex;
   flex-direction: column;
@@ -223,19 +223,19 @@ button:focus {
   display: none;
 }
 
-#task-form {
+.task-form {
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
 
-#task-form div {
+.task-form div {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-#task-form select {
+.task-form select {
   font-size: 1rem;
   background: transparent;
   border-radius: 10px;
@@ -296,13 +296,13 @@ button:focus {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-#modal-form {
+.modal-form {
   display: flex;
   flex-direction: column;
   margin-top: 10px;
 }
 
-#modal-form div {
+.modal-form div {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -346,13 +346,13 @@ input {
     width: 20%;
   }
 
-  #task-form {
+  .task-form {
     flex-direction: row;
     justify-content: space-between;
     gap: 0;
   }
 
-  #task-form div {
+  .task-form div {
     flex-direction: row;
     align-items: center;
     gap: 10px;
