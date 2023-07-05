@@ -24,7 +24,7 @@ const uiModule = (() => {
   // projects
   // Display the project on the page
   function displayProject(project) {
-    const projectListUI = document.getElementById('project-list');
+    const projectListUI = document.querySelector('.project-list');
     const projectElement = document.createElement('li');
     projectElement.classList.add('project');
 
@@ -58,7 +58,7 @@ const uiModule = (() => {
 
   // clear task list ul
   function clearTaskListElement() {
-    const taskList = document.getElementById('task-list');
+    const taskList = document.querySelector('.task-list');
     taskList.innerHTML = '';
   }
 
@@ -149,7 +149,7 @@ const uiModule = (() => {
   // tasks
   // display task
   function displayTask(task, remainingDays) {
-    const taskList = document.getElementById('task-list');
+    const taskList = document.querySelector('.task-list');
     const taskItem = document.createElement('li');
     taskItem.classList.add('task-item');
 
@@ -360,7 +360,7 @@ const uiModule = (() => {
 
   // set project title when opened
   function setProjectTitle() {
-    const currentProject = document.getElementById('current-project');
+    const currentProject = document.querySelector('.current-project');
 
     if (currentTab) {
       currentProject.textContent = capitaliseLetter(currentTab.title);
@@ -371,12 +371,12 @@ const uiModule = (() => {
 
   // hide add task button
   function hideAddTaskBtn() {
-    const addTaskBtn = document.getElementById('add-task-btn');
+    const addTaskBtn = document.querySelector('.add-task-btn');
     addTaskBtn.style.display = 'none';
   }
 
   function showAddTaskBtn() {
-    const addTaskBtn = document.getElementById('add-task-btn');
+    const addTaskBtn = document.querySelector('.add-task-btn');
     addTaskBtn.style.display = 'block';
   }
 
@@ -384,7 +384,7 @@ const uiModule = (() => {
   function displayTodaysTasks() {
     clearTaskListElement();
     hideAddTaskBtn();
-    const title = document.getElementById('current-project');
+    const title = document.querySelector('.current-project');
     title.textContent = 'Tasks due today';
 
     const todaysTasks = getTasksDueToday();
@@ -398,7 +398,7 @@ const uiModule = (() => {
   function displayThisWeeksTasks() {
     clearTaskListElement();
     hideAddTaskBtn();
-    const title = document.getElementById('current-project');
+    const title = document.querySelector('.current-project');
     title.textContent = 'Tasks due this week';
 
     const thisWeeksTasks = getTasksDueThisWeek();
@@ -411,39 +411,39 @@ const uiModule = (() => {
   // event listeners
   function eventListeners() {
     // create a project button
-    const addProjectButton = document.getElementById('create-project-btn');
+    const addProjectButton = document.querySelector('.create-project-btn');
     addProjectButton.addEventListener('click', openModal);
 
     // add project to project array
-    const addButton = document.getElementById('add-project-btn');
+    const addButton = document.querySelector('.add-project-btn');
     addButton.addEventListener('click', addNewProject);
 
     // create task button
-    const addTaskButton = document.getElementById('add-task-btn');
+    const addTaskButton = document.querySelector('.add-task-btn');
     addTaskButton.addEventListener('click', openTaskForm);
 
     // add task to project
-    const addTaskToProjectBtn = document.getElementById('add-task-to-project');
+    const addTaskToProjectBtn = document.querySelector('.add-task-to-project');
     addTaskToProjectBtn.addEventListener('click', addTaskToProject);
 
     // inbox button
-    const inboxBtn = document.getElementById('inbox-btn');
+    const inboxBtn = document.querySelector('.inbox-btn');
     inboxBtn.addEventListener('click', openInbox);
 
     // cancel task
-    const cancelTaskButton = document.getElementById('cancel-task');
+    const cancelTaskButton = document.querySelector('.cancel-task');
     cancelTaskButton.addEventListener('click', closeTaskForm);
 
     // cancel project
-    const cancelProjectButton = document.getElementById('cancel-project');
+    const cancelProjectButton = document.querySelector('.cancel-project');
     cancelProjectButton.addEventListener('click', closeModal);
 
     // open todays tasks
-    const todayBtn = document.getElementById('today-btn');
+    const todayBtn = document.querySelector('.today-btn');
     todayBtn.addEventListener('click', displayTodaysTasks);
 
     // open this weeks tasks
-    const thisWeekBtn = document.getElementById('this-week-btn');
+    const thisWeekBtn = document.querySelector('.this-week-btn');
     thisWeekBtn.addEventListener('click', displayThisWeeksTasks);
   }
 
